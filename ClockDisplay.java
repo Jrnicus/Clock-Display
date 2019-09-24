@@ -98,7 +98,7 @@ public class ClockDisplay
     {
         if(hours.getValue() <= 11 && hours.getValue() != 0)
         {
-            displayString = hours.getDisplayValue() + ":" + 
+            displayString = hours.getValue() + ":" + 
                         minutes.getDisplayValue() + meridium;
         }
         else if (hours.getValue() > 12)
