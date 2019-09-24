@@ -17,7 +17,7 @@ public class ClockDisplay
     private NumberDisplay hours;
     private NumberDisplay minutes;
     private String displayString;    // simulates the actual display
-    
+    private String meridium;
     /**
      * Constructor for ClockDisplay objects. This constructor 
      * creates a new clock set at 00:00.
@@ -26,6 +26,7 @@ public class ClockDisplay
     {
         hours = new NumberDisplay(24);
         minutes = new NumberDisplay(60);
+        setMeridium();
         updateDisplay();
     }
 
@@ -50,6 +51,7 @@ public class ClockDisplay
         minutes.increment();
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
+            setMeridium();
         }
         updateDisplay();
     }
@@ -62,6 +64,7 @@ public class ClockDisplay
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        setMeridium();
         updateDisplay();
     }
 
@@ -74,11 +77,37 @@ public class ClockDisplay
     }
     
     /**
+     * This will set AM or PM based on what hour it is on the 24 hour cock
+     */
+    public void setMeridium()
+    {
+        if(hours.getValue() <= 11)
+        {
+            meridium = "AM";
+        }
+        else
+        {
+            meridium = "PM";
+        }
+    }
+    
+    /**
      * Update the internal string that represents the display.
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        if(hours.getValue() <= 11 && hours.getValue() != 0)
+        {
+            displayString = hours.getDisplayValue() + ":" + 
+                        minutes.getDisplayValue() + meridium;
+        }
+        else if (hours.getValue() > 12)
+        {
+            displayString = (hours.getValue() - 12) + ":" + minutes.getDisplayValue() + meridium;
+        }
+        else
+        {
+            displayString = "12:" + minutes.getDisplayValue() + meridium;
+        }
     }
 }
