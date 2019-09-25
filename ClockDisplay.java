@@ -17,6 +17,7 @@ public class ClockDisplay
     private NumberDisplay hours;
     private NumberDisplay minutes;
     private String displayString;    // simulates the actual display
+    private String meridium;
     
     /**
      * Constructor for ClockDisplay objects. This constructor 
@@ -24,8 +25,9 @@ public class ClockDisplay
      */
     public ClockDisplay()
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
+        meridium = "AM";
         updateDisplay();
     }
 
@@ -34,11 +36,12 @@ public class ClockDisplay
      * creates a new clock set at the time specified by the 
      * parameters.
      */
-    public ClockDisplay(int hour, int minute)
+    public ClockDisplay(int hour, int minute, String am_pm)
     {
-        hours = new NumberDisplay(24);
+        hours = new NumberDisplay(12);
         minutes = new NumberDisplay(60);
-        setTime(hour, minute);
+        meridium = am_pm;
+        setTime(hour, minute, meridium);
     }
 
     /**
@@ -50,6 +53,10 @@ public class ClockDisplay
         minutes.increment();
         if(minutes.getValue() == 0) {  // it just rolled over!
             hours.increment();
+            if (hours.getValue() == 0)
+            {
+                changeMeridium();
+            }
         }
         updateDisplay();
     }
@@ -58,10 +65,11 @@ public class ClockDisplay
      * Set the time of the display to the specified hour and
      * minute.
      */
-    public void setTime(int hour, int minute)
+    public void setTime(int hour, int minute, String am_pm)
     {
         hours.setValue(hour);
         minutes.setValue(minute);
+        meridium = am_pm;
         updateDisplay();
     }
 
@@ -74,11 +82,35 @@ public class ClockDisplay
     }
     
     /**
+     * This will change the meridium from what ever it is to the other opetion
+     * if its AM it will change to PM
+     * if its PM it will change to AM
+     */
+    public void changeMeridium()
+    {
+        if (meridium.equalsIgnoreCase("PM"))
+        {
+            meridium = "AM";
+        }
+        else
+        {
+            meridium = "PM";
+        }
+    }
+    
+    /**
      * Update the internal string that represents the display.
      */
     private void updateDisplay()
     {
-        displayString = hours.getDisplayValue() + ":" + 
-                        minutes.getDisplayValue();
+        if (hours.getValue() != 0)
+        {
+            displayString = hours.getValue() + ":" + 
+                            minutes.getDisplayValue() + meridium;
+        }
+        else
+        {
+            displayString = "12:" + minutes.getDisplayValue() + meridium;
+        }
     }
 }
